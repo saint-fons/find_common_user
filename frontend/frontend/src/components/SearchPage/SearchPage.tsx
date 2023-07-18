@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { TextField, DefaultButton, Spinner, SpinnerSize } from '@fluentui/react';
-import axios from 'axios';
+import { Spinner, SpinnerSize } from '@fluentui/react';
+
 import styles from './SearchPageStyles.module.css';
 import SearchForm from '../SearchForm/SearchForm';
+import { handleSearchSubmit } from './SearchPageUtils/SearchPageUtils';
 
-interface UserData {
+export interface UserData {
   email: string;
   number: string;
 }
@@ -13,24 +14,14 @@ const SearchPage: React.FC = () => {
   const [searchResults, setSearchResults] = useState<UserData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSearchSubmit = async (searchData: { email: string; number: string }) => {
-    setIsLoading(true);
-
-    try {
-      const response = await axios.post('http://localhost:3000/search', searchData);
-      const foundUsers = response.data;
-      setSearchResults(foundUsers);
-    } catch (error) {
-      console.error('Error executing the request:', error);
-    }
-
-    setIsLoading(false);
+  const handleSubmit = (searchData: UserData) => {
+    handleSearchSubmit(searchData, setSearchResults, setIsLoading);
   };
 
   return (
     <div className={styles.container}>
       <h1>Search Page</h1>
-      <SearchForm onSubmit={handleSearchSubmit} />
+      <SearchForm onSubmit={handleSubmit} />
 
       {isLoading ? (
         <Spinner size={SpinnerSize.medium} />
