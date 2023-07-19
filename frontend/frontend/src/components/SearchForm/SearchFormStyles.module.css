@@ -25,3 +25,8 @@
   border: none;
   cursor: pointer;
 }
+
+.buttonContainer {
+  margin-top: 15px;
+  text-align: center;
+}

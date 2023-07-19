@@ -1,12 +1,20 @@
 import bodyParser = require('body-parser');
 import express = require('express');
-import { validationResult, body } from 'express-validator';
+import { validationResult, body, ValidationError } from 'express-validator';
 import { readFileSync } from 'fs';
 import cors from 'cors';
 
 interface User {
   email: string;
   number: string;
+}
+
+interface Error {
+  type: string;
+  value: string;
+  msg: string;
+  path: string;
+  location: string;
 }
 
 const app = express();
@@ -33,24 +41,35 @@ app.post(
     body('email').isEmail().withMessage('Некорректный email'),
 
     // Валидация number как опционального поля
-    body('number').optional().isNumeric().withMessage('Некорректный number'),
+    body('number')
+      .optional({ checkFalsy: true }) // Допускаем пустую строку
+      .isNumeric()
+      .withMessage('Некорректный number'),
   ],
   (req: express.Request, res: express.Response) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      const validationErrors: Error[] = errors.array().map((error: ValidationError) => ({
+        type: 'field',
+        value: '',
+        msg: error.msg,
+        path: '',
+        location: 'body',
+      }));
+
+      return res.status(400).json({ errors: validationErrors });
     }
 
     const { email, number } = req.body;
 
     const foundUsers = users.filter((user: User) => {
-      if (email && number) {
-        return user.email === email && user.number === number;
-      } else if (email) {
-        return user.email === email;
-      } else if (number) {
-        return user.number === number;
+      if (email) {
+        if (number) {
+          return user.email === email && user.number === number;
+        } else {
+          return user.email === email;
+        }
       }
       return false;
     });
