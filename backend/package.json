@@ -1,0 +1,32 @@
+{
+  "name": "find_person_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saint-fons/find_common_user.git"
+  },
+  "author": "Ivan Zhuravlev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saint-fons/find_common_user/issues"
+  },
+  "homepage": "https://github.com/saint-fons/find_common_user#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "typescript": "^5.1.6"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.2",
+    "@types/express": "^4.17.17",
+    "ts-node": "^10.9.1"
+  }
+}

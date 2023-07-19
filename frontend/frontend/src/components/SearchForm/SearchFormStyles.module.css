@@ -1,0 +1,32 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.form-field {
+  margin-bottom: 10px;
+}
+
+.form-field label {
+  font-weight: bold;
+}
+
+.form-field .input-field {
+  border: 1px solid #0078d4;
+  padding: 5px;
+  width: 100%;
+}
+
+.button {
+  background-color: #0078d4;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.buttonContainer {
+  margin-top: 15px;
+  text-align: center;
+}
