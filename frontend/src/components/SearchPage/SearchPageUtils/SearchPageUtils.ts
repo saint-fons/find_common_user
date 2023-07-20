@@ -1,15 +1,15 @@
 import axios from 'axios';
-import { ErrorResponseInterface, ErrorsInterface, UserData } from '../SearchPageTypes';
+import { ErrorResponseInterface, ErrorsInterface, ServerResponse, UserData } from '../SearchPageTypes';
 
 export const handleSearchSubmit = async (
   searchData: UserData,
-  setSearchResults: (data: UserData[]) => void,
+  setSearchResults: (data: ServerResponse[]) => void,
   setIsLoading: (isLoading: boolean) => void,
-  setErrors: (errors: ErrorsInterface[] | undefined) => void
+  setErrors: (errors: ErrorsInterface[] | undefined) => void,
+  errorMessage: string
 ) => {
   setIsLoading(true);
 
-  console.log('searchData', searchData);
 
   searchData = {
     email: searchData.email,
@@ -17,13 +17,11 @@ export const handleSearchSubmit = async (
   };
 
   try {
-    const response = await axios.post('http://localhost:3000/search', searchData);
-    console.log('response', response);
+    const response = await axios.post<ServerResponse[]>('http://localhost:3000/search', searchData);
     const foundUsers = response.data;
     setErrors(undefined);
     setSearchResults(foundUsers);
   } catch (error: any) {
-    console.log('error', error);
     if (error.response && error.response.data) {
       const { errors } = error.response.data as ErrorResponseInterface;
       const newErrors: ErrorsInterface[] = errors.map((errorItem) => ({
@@ -31,12 +29,11 @@ export const handleSearchSubmit = async (
         messageType: 'error',
       }));
       setErrors(newErrors);
-    }
-    if (error.message === 'Network Error') {
+    } else {
       setErrors([
         {
-          message: 'Ошибка соединения с сервером. Пожалуйста, попробуйте позже.',
-          messageType: 'info',
+          message: errorMessage,
+          messageType: 'error',
         },
       ]);
     }

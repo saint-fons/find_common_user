@@ -1,11 +1,12 @@
-import bodyParser = require('body-parser');
-import express = require('express');
+import express from 'express';
+import bodyParser from 'body-parser';
 import { validationResult, body, ValidationError } from 'express-validator';
 import cors from 'cors';
 import { UserInterface } from './ServerTypes';
-const i18next = require('i18next');
-const { readFileSync } = require('fs');
-const i18nextMiddleware = require('i18next-express-middleware');
+import i18nextMiddleware from 'i18next-express-middleware';
+import i18next from 'i18next';
+import { readFileSync } from 'fs';
+
 const translationEn = JSON.parse(readFileSync('./locales/en/translation.json', 'utf8'));
 const translationRu = JSON.parse(readFileSync('./locales/ru/translation.json', 'utf8'));
 
@@ -22,13 +23,20 @@ i18next.init({
 });
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
 let currentRequestTimeout: NodeJS.Timeout | null = null;
-const jsonData = readFileSync('data.json', 'utf8');
-const users: UserInterface[] = JSON.parse(jsonData);
+let currentRequest: express.Request | null = null;
+
+function cancelPreviousRequest() {
+  if (currentRequestTimeout) {
+    clearTimeout(currentRequestTimeout);
+    currentRequestTimeout = null;
+    currentRequest = null;
+  }
+}
 
 app.use(cors());
 
@@ -38,7 +46,20 @@ app.use(
   })
 );
 
-app.use(i18nextMiddleware.handle(i18next)); // Добавьте эту строку
+app.use(i18nextMiddleware.handle(i18next));
+
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  if (currentRequest) {
+    cancelPreviousRequest();
+    res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+  } else {
+    console.error('Произошла ошибка:', err.message);
+    res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+  }
+});
+
+const jsonData = readFileSync('data.json', 'utf8');
+const users: UserInterface[] = JSON.parse(jsonData);
 
 app.post(
   '/search',
@@ -47,6 +68,8 @@ app.post(
     body('number').optional({ checkFalsy: true }).isNumeric().withMessage('validationErrors.number'),
   ],
   (req: express.Request, res: express.Response) => {
+    cancelPreviousRequest();
+
     const acceptLanguage = req.headers['accept-language'];
     let lng = 'en'; // Язык по умолчанию
 
@@ -85,12 +108,24 @@ app.post(
       return false;
     });
 
+    // Сохраняем текущий запрос и его таймаут
+    currentRequest = req;
     currentRequestTimeout = setTimeout(() => {
       res.json(foundUsers);
+      currentRequest = null;
     }, 5000);
   }
 );
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Сервер запущен на порту ${port}`);
+});
+
+process.on('SIGINT', () => {
+  console.log('Сервер завершает работу...');
+  cancelPreviousRequest();
+  server.close(() => {
+    console.log('Сервер корректно завершен.');
+    process.exit(0);
+  });
 });

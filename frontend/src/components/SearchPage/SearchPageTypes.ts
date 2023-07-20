@@ -18,3 +18,8 @@ export interface ErrorItemInterface {
 export interface ErrorResponseInterface {
   errors: ErrorItemInterface[];
 }
+
+export interface ServerResponse {
+  email: string;
+  number: string;
+}

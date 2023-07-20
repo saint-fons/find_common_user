@@ -11,6 +11,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSubmit }) => {
   const [email, setEmail] = useState('');
   const [number, setNumber] = useState('');
   const [emailError, setEmailError] = useState<string>('');
+  const [emailTouched, setEmailTouched] = useState<boolean>(false);
   const { t } = useTranslation();
 
   const handleSearch = () => {
@@ -19,7 +20,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSubmit }) => {
       return;
     }
 
-    setEmailError(''); // Очищаем ошибку перед выполнением запроса
+    setEmailError('');
     handleSubmit(email, number, onSubmit);
   };
 
@@ -32,6 +33,13 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSubmit }) => {
     setEmailError('');
   };
 
+  const handleEmailBlur = () => {
+    setEmailTouched(true);
+    if (!email.trim()) {
+      setEmailError(t('searchPage.emailRequired'));
+    }
+  };
+
   return (
     <div className={styles.container}>
       <Label required>{t('searchPage.emailLabel')}</Label>
@@ -39,7 +47,8 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSubmit }) => {
         placeholder={t('searchPage.emailPlaceholder')}
         value={email}
         onChange={handleEmailInputChange}
-        errorMessage={emailError}
+        onBlur={handleEmailBlur}
+        errorMessage={emailTouched && emailError ? emailError : undefined}
         className={styles['form-field']}
       />
       <InputMask

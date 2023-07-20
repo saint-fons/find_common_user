@@ -1,13 +1,10 @@
 {
   "name": "frontend",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@fluentui/react": "^8.110.9",
     "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
     "@types/node": "^16.18.38",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
@@ -20,7 +17,6 @@
     "react-input-mask": "^2.0.4",
     "react-input-masked": "^1.0.4",
     "react-number-format": "^5.2.2",
-    "react-scripts": "5.0.1",
     "text-mask-addons": "^3.8.0",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
@@ -48,5 +44,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^29.5.3",
+    "@types/testing-library__jest-dom": "^5.14.8",
+    "@types/testing-library__react": "^10.2.0",
+    "react-scripts": "^5.0.1"
   }
 }

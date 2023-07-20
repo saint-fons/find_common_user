@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Spinner, SpinnerSize, Label } from '@fluentui/react';
+import { Spinner, SpinnerSize } from '@fluentui/react';
 import styles from './SearchPageStyles.module.css';
 import { handleSearchSubmit } from './SearchPageUtils/SearchPageUtils';
 import ErrorBar from '../ErrorBar/ErrorBar';
@@ -17,7 +17,7 @@ export const SearchPage: React.FC = () => {
   const { t } = useTranslation();
 
   const handleSubmit = (searchData: UserData) => {
-    handleSearchSubmit(searchData, setSearchResults, setIsLoading, setErrors);
+    handleSearchSubmit(searchData, setSearchResults, setIsLoading, setErrors, t('searchPage.netWorkError'));
     setFirstRequestMade(true);
   };
 
