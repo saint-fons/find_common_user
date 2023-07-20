@@ -5,15 +5,17 @@ import styles from './SearchFormStyles.module.css';
 import InputMask from 'react-input-mask';
 import { handleNumberChange, handleSubmit } from './SearchFormUtils/SearchFormUtils';
 import { SearchFormProps } from './SearchFormTypes';
+import { useTranslation } from 'react-i18next';
 
 export const SearchForm: React.FC<SearchFormProps> = ({ onSubmit }) => {
   const [email, setEmail] = useState('');
   const [number, setNumber] = useState('');
   const [emailError, setEmailError] = useState<string>('');
+  const { t } = useTranslation();
 
   const handleSearch = () => {
     if (!email.trim()) {
-      setEmailError('Email is required');
+      setEmailError(t('searchPage.emailRequired'));
       return;
     }
 
@@ -32,17 +34,28 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSubmit }) => {
 
   return (
     <div className={styles.container}>
-      <Label required>Email</Label>
-      <TextField value={email} onChange={handleEmailInputChange} errorMessage={emailError} className={styles['form-field']} />
-      <InputMask mask="99-99-99" value={number} onChange={(e: any) => handleNumberChange(e, setNumber)}>
+      <Label required>{t('searchPage.emailLabel')}</Label>
+      <TextField
+        placeholder={t('searchPage.emailPlaceholder')}
+        value={email}
+        onChange={handleEmailInputChange}
+        errorMessage={emailError}
+        className={styles['form-field']}
+      />
+      <InputMask
+        placeholder={t('searchPage.numberPlaceholder')}
+        mask="99-99-99"
+        value={number}
+        onChange={(e: any) => handleNumberChange(e, setNumber)}
+      >
         {(inputProps: React.InputHTMLAttributes<HTMLInputElement>) => (
           // @ts-ignore
-          <TextField label="Number" {...inputProps} className={styles['form-field']} />
+          <TextField label={t('searchPage.numberLabel')} {...inputProps} className={styles['form-field']} />
         )}
       </InputMask>
 
       <div className={styles.buttonContainer}>
-        <DefaultButton text="Search" onClick={handleSearch} className={styles.button} />
+        <DefaultButton text={t('searchPage.search')} onClick={handleSearch} className={styles.button} />
       </div>
     </div>
   );
