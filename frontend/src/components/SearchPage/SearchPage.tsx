@@ -17,7 +17,7 @@ export const SearchPage: React.FC = () => {
   const { t } = useTranslation();
 
   const handleSubmit = (searchData: UserData) => {
-    handleSearchSubmit(searchData, setSearchResults, setIsLoading, setErrors);
+    handleSearchSubmit(searchData, setSearchResults, setIsLoading, setErrors, t('searchPage.netWorkError'));
     setFirstRequestMade(true);
   };
 

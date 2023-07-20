@@ -1,46 +1,90 @@
-# Getting Started with Create React App
+<div>
+  <img src="https://github.com/devicons/devicon/blob/master/icons/react/react-original-wordmark.svg" title="React" alt="React" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/devicons/devicon/blob/master/icons/nodejs/nodejs-original-wordmark.svg" title="Nodejs" alt="Nodejs" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/devicons/devicon/blob/master/icons/typescript/typescript-original.svg" title="TypeScript" alt="TypeScript" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/devicons/devicon/blob/master/icons/git/git-original-wordmark.svg" title="Git" alt="Git" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/devicons/devicon/blob/master/icons/css3/css3-original-wordmark.svg" title="CSS" alt="CSS" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/devicons/devicon/blob/master/icons/express/express-original.svg" title="express" alt="express" width="40" height="40"/>&nbsp;
+</div>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Проект "Поиск пользователей по адресу почты и номеру"
 
-## Available Scripts
+### Описание проекта
 
-In the project directory, you can run:
+Проект "Поиск пользователей по адресу почты и номеру" представляет собой веб-приложение с одной страницей, на которой расположена форма для поиска пользователей. Форма содержит два поля: "Email" (обязательное) и "Number" (опциональное), а также кнопку "Submit" для выполнения поискового запроса.
 
-### `npm start`
+Приложение осуществляет поиск пользователей в предоставленном JSON-файле по заданным критериям (Email и/или номер) на серверной стороне и возвращает соответствующие результаты на клиентскую сторону для отображения.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Задача заказчика
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Поставленная задача заказчика заключается в следующем:
 
-### `npm test`
+- Разработать веб-приложение с одной страницей, содержащей форму для поиска пользователей по Email и номеру.
+- Обязательные поля формы: "Email" (обязательное) и "Number" (опциональное).
+- При нажатии на кнопку "Submit", отправить запрос на сервер для выполнения поиска пользователей по заданным критериям.
+- Имитировать задержку обработки запроса на сервере в 5 секунд для эмуляции долгой обработки.
+- Обеспечить обязательную валидацию полей "Email" и "Number". Валидацию можно реализовать на клиентской или серверной стороне.
+- Добавить маску на поле "Number", чтобы номер отображался с дефисами каждые два знака (например, 22-11-22, 83-03-47).
+- Технологии: React или Vue (с типизацией на выбор) для фронтенда, Node.js с обязательной типизацией для бекенда.
+- Использование библиотек на усмотрение разработчика.
+  Деплой не обязателен, достаточно предоставить Readme с инструкцией по запуску проекта.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Особенности проекта
 
-### `npm run build`
+### Локализация
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Проект включает в себя поддержку локализации с помощью библиотеки i18next. Это позволяет предоставить приложение на разных языках, что повышает удобство использования для пользователей разных стран и культур. В нашем проекте реализована поддержка английского и русского языков. Локализованные строки хранятся в отдельных файлах для каждого языка, что облегчает их добавление и изменение.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Эффективная обработка запросов
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Для имитации долгой обработки запросов на сервере, мы добавили задержку в 5 секунд при поиске пользователей. Это дает пользователю визуальное обратное сообщение о выполнении запроса и улучшает опыт использования приложения. При этом, при повторном запросе с клиентской стороны, предыдущий запрос будет отменен, что обеспечивает эффективное управление запросами и исключает возможность получения устаревших данных.
 
-### `npm run eject`
+### Маска для поля "Number"
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Для удобства пользователей мы добавили маску для поля "Number", которая отображает номер с дефисами после каждых двух знаков (например, 22-11-22, 83-03-47). Это позволяет легко вводить номер в правильном формате, что минимизирует возможность ошибок при вводе данных.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Типизация для безопасности кода
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Использование TypeScript для фронтенда и бекенда обеспечивает более высокую степень безопасности кода, предотвращает ошибки и упрощает разработку, облегчая поддержку проекта в будущем.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Установка и запуск проекта
 
-## Learn More
+### !установка выполнялась на версии node 18.12.1
+Для установки и запуска проекта выполните следующие шаги:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Клонируйте репозиторий с проектом на свой компьютер.
+- Перейдите в корневую директорию проекта.
+- Установите зависимости для серверной части, выполнив команду:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### cd backend
+
+### npm install
+
+- Вернитесь в корневую директорию проекта, затем перейдите в директорию "frontend" и установите зависимости для клиентской части, выполнив команду:
+
+### cd frontend
+
+### npm install
+
+- Вернитесь в корневую директорию проекта и выполните команду для запуска приложения:
+
+### npm run dev
+
+- Приложение будет доступно по адресу: http://localhost:3001/
+
+# Технологии и зависимости
+
+- Фронтенд: React с использованием TypeScript, библиотека @fluentui/react для UI-компонентов, библиотека react-input-mask для маски поля "Number", react-axios для выполнения запросов к бекенду.
+  Бекенд: Node.js с использованием TypeScript, Express для обработки запросов, i18next для локализации, и другие необходимые зависимости.
+
+- Важно! Приложение эмулирует задержку обработки запроса на сервере в 5 секунд. При повторном запросе с клиентской стороны, предыдущий запрос будет отменен.
+
+- Пожалуйста, убедитесь, что JSON-файл с данными пользователей находится в корневой директории проекта с именем "data.json".
+
+# Автор
+
+Проект разработан и создан в рамках тестового задания заказчиком. Автор: Журавлев Иван
+
+# Примечание
+
+При необходимости добавления новых функций или изменений, не стесняйтесь связаться с автором проекта.

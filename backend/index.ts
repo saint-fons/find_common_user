@@ -8,6 +8,7 @@ const { readFileSync } = require('fs');
 const i18nextMiddleware = require('i18next-express-middleware');
 const translationEn = JSON.parse(readFileSync('./locales/en/translation.json', 'utf8'));
 const translationRu = JSON.parse(readFileSync('./locales/ru/translation.json', 'utf8'));
+require('dotenv').config(); // Загрузка переменных окружения из файла .env
 
 i18next.init({
   lng: 'en',
@@ -22,13 +23,20 @@ i18next.init({
 });
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
 let currentRequestTimeout: NodeJS.Timeout | null = null;
-const jsonData = readFileSync('data.json', 'utf8');
-const users: UserInterface[] = JSON.parse(jsonData);
+let users: UserInterface[] = [];
+
+try {
+  const jsonData = readFileSync('data.json', 'utf8');
+  users = JSON.parse(jsonData);
+} catch (error) {
+  console.error('Ошибка чтения файла data.json:', error.message);
+  process.exit(1); // Завершение работы при возникновении ошибки чтения файла
+}
 
 app.use(cors());
 
@@ -38,7 +46,12 @@ app.use(
   })
 );
 
-app.use(i18nextMiddleware.handle(i18next)); // Добавьте эту строку
+app.use(i18nextMiddleware.handle(i18next));
+
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error('Произошла ошибка:', err.message);
+  res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+});
 
 app.post(
   '/search',
@@ -91,6 +104,15 @@ app.post(
   }
 );
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Сервер запущен на порту ${port}`);
+});
+
+process.on('SIGINT', () => {
+  console.log('Сервер завершает работу...');
+  clearTimeout(currentRequestTimeout);
+  server.close(() => {
+    console.log('Сервер корректно завершен.');
+    process.exit(0);
+  });
 });
