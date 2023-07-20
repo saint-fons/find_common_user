@@ -1,21 +1,25 @@
 import bodyParser = require('body-parser');
 import express = require('express');
 import { validationResult, body, ValidationError } from 'express-validator';
-import { readFileSync } from 'fs';
 import cors from 'cors';
+import { UserInterface } from './ServerTypes';
+const i18next = require('i18next');
+const { readFileSync } = require('fs');
+const i18nextMiddleware = require('i18next-express-middleware');
+const translationEn = JSON.parse(readFileSync('./locales/en/translation.json', 'utf8'));
+const translationRu = JSON.parse(readFileSync('./locales/ru/translation.json', 'utf8'));
 
-interface User {
-  email: string;
-  number: string;
-}
-
-interface Error {
-  type: string;
-  value: string;
-  msg: string;
-  path: string;
-  location: string;
-}
+i18next.init({
+  lng: 'en',
+  resources: {
+    en: {
+      translation: translationEn,
+    },
+    ru: {
+      translation: translationRu,
+    },
+  },
+});
 
 const app = express();
 const port = 3000;
@@ -24,36 +28,43 @@ app.use(bodyParser.json());
 
 let currentRequestTimeout: NodeJS.Timeout | null = null;
 const jsonData = readFileSync('data.json', 'utf8');
-const users: User[] = JSON.parse(jsonData);
+const users: UserInterface[] = JSON.parse(jsonData);
 
 app.use(cors());
 
 app.use(
   cors({
-    origin: 'http://localhost:3001', // Замените на URL вашего фронтенд-приложения
+    origin: 'http://localhost:3001',
   })
 );
+
+app.use(i18nextMiddleware.handle(i18next)); // Добавьте эту строку
 
 app.post(
   '/search',
   [
-    // Валидация email как обязательного поля
-    body('email').isEmail().withMessage('Некорректный email'),
-
-    // Валидация number как опционального поля
-    body('number')
-      .optional({ checkFalsy: true }) // Допускаем пустую строку
-      .isNumeric()
-      .withMessage('Некорректный number'),
+    body('email').isEmail().withMessage('validationErrors.email'),
+    body('number').optional({ checkFalsy: true }).isNumeric().withMessage('validationErrors.number'),
   ],
   (req: express.Request, res: express.Response) => {
+    const acceptLanguage = req.headers['accept-language'];
+    let lng = 'en'; // Язык по умолчанию
+
+    if (acceptLanguage) {
+      const languages = acceptLanguage.split(',');
+      const languageParts = languages[0].split(';');
+      lng = languageParts[0];
+    }
+
+    i18next.changeLanguage(lng); // Установка языка в соответствии с предпочитаемым языком клиента
+
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      const validationErrors: Error[] = errors.array().map((error: ValidationError) => ({
+      const validationErrors: ValidationError[] = errors.array().map((error: ValidationError) => ({
         type: 'field',
         value: '',
-        msg: error.msg,
+        msg: i18next.t(error.msg),
         path: '',
         location: 'body',
       }));
@@ -63,7 +74,7 @@ app.post(
 
     const { email, number } = req.body;
 
-    const foundUsers = users.filter((user: User) => {
+    const foundUsers = users.filter((user: UserInterface) => {
       if (email) {
         if (number) {
           return user.email === email && user.number === number;
@@ -74,7 +85,6 @@ app.post(
       return false;
     });
 
-    // Устанавливаем задержку обработки запроса в 5 секунд
     currentRequestTimeout = setTimeout(() => {
       res.json(foundUsers);
     }, 5000);

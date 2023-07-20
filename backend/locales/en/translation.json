@@ -1,0 +1,6 @@
+{
+  "validationErrors": {
+    "email": "Invalid email",
+    "number": "Invalid number"
+  }
+}
