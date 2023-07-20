@@ -2,6 +2,7 @@ import bodyParser = require('body-parser');
 import express = require('express');
 import { validationResult, body, ValidationError } from 'express-validator';
 import cors from 'cors';
+import { UserInterface } from './ServerTypes';
 const i18next = require('i18next');
 const { readFileSync } = require('fs');
 const i18nextMiddleware = require('i18next-express-middleware');
@@ -27,7 +28,7 @@ app.use(bodyParser.json());
 
 let currentRequestTimeout: NodeJS.Timeout | null = null;
 const jsonData = readFileSync('data.json', 'utf8');
-const users: any = JSON.parse(jsonData);
+const users: UserInterface[] = JSON.parse(jsonData);
 
 app.use(cors());
 
@@ -60,10 +61,10 @@ app.post(
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      const validationErrors: any = errors.array().map((error: ValidationError) => ({
+      const validationErrors: ValidationError[] = errors.array().map((error: ValidationError) => ({
         type: 'field',
         value: '',
-        msg: i18next.t(error.msg), // Используйте req.t для перевода сообщения
+        msg: i18next.t(error.msg),
         path: '',
         location: 'body',
       }));
@@ -73,7 +74,7 @@ app.post(
 
     const { email, number } = req.body;
 
-    const foundUsers = users.filter((user: any) => {
+    const foundUsers = users.filter((user: UserInterface) => {
       if (email) {
         if (number) {
           return user.email === email && user.number === number;
