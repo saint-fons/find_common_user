@@ -4,7 +4,7 @@
   <img src="https://github.com/devicons/devicon/blob/master/icons/typescript/typescript-original.svg" title="TypeScript" alt="TypeScript" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/git/git-original-wordmark.svg" title="Git" alt="Git" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/css3/css3-original-wordmark.svg" title="CSS" alt="CSS" width="40" height="40"/>&nbsp;
-  <img src="https://github.com/devicons/devicon/blob/master/icons/express/express-original.svg" title="express" 
+  <img src="https://github.com/devicons/devicon/blob/master/icons/express/express-original.svg" title="express" alt="express" width="40" height="40"/>&nbsp;
 </div>
 
 # Проект "Поиск пользователей по адресу почты и номеру"
